@@ -80,10 +80,8 @@ def gaussian_kernel(X, sigma, k, max_iter, n_init):
     idx_history = {}
     sse_history = np.zeros((n_init, 1))
     for h in range(n_init):
-        np.random.seed(h)
-        idx = np.random.choice(range(k), size=n, replace=True)
-        centroids = X[np.random.choice(np.arange(n), k, replace=False), :]
-        print(centroids)
+        centroids = init_centroids(X, k)
+        idx = np.random.choice(range(k), size=n)
         for j in range(max_iter):
             dist = np.zeros((n, k))
             dist1 = np.diag(kernel_matrix)
@@ -108,14 +106,15 @@ def gaussian_kernel(X, sigma, k, max_iter, n_init):
     return best_idx, best_controids, best_sse
 
 
-# centroids do not update
+''' K-Means '''
 # init = init_centroids(X, 2)
 # idx, centroids = k_means(X, init, 300)
-best_idx, best_controids, best_sse = gaussian_kernel(X, 1.0, 2, 100, 20)
+''' Gaussian kernel K-Means'''
+best_idx, best_controids, best_sse = gaussian_kernel(X, 5.0, 2, 100, 20)
 
 
 '''
-Kmeans by Python libraries
+Kmeans by sklearn
 '''
 # scaler = StandardScaler()
 # scaledX = scaler.fit_transform(X)
@@ -154,7 +153,11 @@ ax.scatter(cluster1[:, 0], cluster1[:, 1], s=30, color='r', label='Cluster 1')
 ax.scatter(cluster2[:, 0], cluster2[:, 1], s=30, color='g', label='Cluster 2')
 # ax.scatter(cluster3[:, 0], cluster3[:, 1], s=30, color='b', label='Cluster 3')
 ax.legend()
-#
+
+
+'''
+elbow point
+'''
 # plt.style.use("fivethirtyeight")
 # plt.plot(range(1, 11), sse)
 # plt.xticks(range(1, 11))
